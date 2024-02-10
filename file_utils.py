@@ -71,6 +71,14 @@ def saveResult(img_file, img, boxes, dirname='./result/', verticals=None, texts=
                     cv2.putText(img, "{}".format(texts[i]), (poly[0][0]+1, poly[0][1]+1), font, font_scale, (0, 0, 0), thickness=1)
                     cv2.putText(img, "{}".format(texts[i]), tuple(poly[0]), font, font_scale, (0, 255, 255), thickness=1)
 
+                # Crop text region and save as separate image
+                x, y, w, h = cv2.boundingRect(poly)
+                cropped_img = img[y:y+h, x:x+w]
+                crop_dir = os.path.join(dirname, "text")
+                if not os.path.isdir(crop_dir):
+                    os.mkdir(crop_dir)
+                cv2.imwrite(os.path.join(crop_dir, "crop_" + filename + f"_{i}.jpg"), cropped_img)
+
         # Save result image
         cv2.imwrite(res_img_file, img)
 
